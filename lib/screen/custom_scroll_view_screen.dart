@@ -5,7 +5,7 @@ import 'package:scrollable_widgets/const/colors.dart';
 class CustomScrollViewScreen extends StatelessWidget {
   final List<int> numbers = List.generate(100, (index) => index);
 
-  CustomScrollViewScreen({Key? key}) : super (key: key);
+  CustomScrollViewScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,29 +15,67 @@ class CustomScrollViewScreen extends StatelessWidget {
           SliverAppBar(
             title: Text('CustomScrollViewScreen'),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                (context,index) {
-                  return renderContainer(color: rainbowColors[index % rainbowColors.length], index: index);
-                },
-              childCount: 100,
-            ),
-          ),
+          renderSliverGridBuilder(),
         ],
       ),
     );
   }
 
-  SliverList rencerChildSilverList(){
+  SliverList renderChildBuilderList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return renderContainer(
+              color: rainbowColors[index % rainbowColors.length], index: index);
+        },
+        childCount: 100,
+      ),
+    );
+  }
+
+  // GridView.builder와 비슷
+  SliverGrid renderSliverGridBuilder(){
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate(
+            (context, index) {
+          return renderContainer(
+              color: rainbowColors[index % rainbowColors.length], index: index);
+        },
+        childCount: 100,
+      ),
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 150,
+      ),
+    );
+  }
+
+  // GridView.count 유사함
+  SliverGrid renderChildSliverGrid(){
+    return SliverGrid(
+      delegate: SliverChildListDelegate(numbers
+          .map(
+            (e) => renderContainer(
+          color: rainbowColors[e % rainbowColors.length],
+          index: e,
+        ),
+      )
+          .toList()),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+    );
+  }
+
+  SliverList renderChildSilverList() {
     return SliverList(
       delegate: SliverChildListDelegate(
         numbers
             .map(
               (e) => renderContainer(
-            color: rainbowColors[e % rainbowColors.length],
-            index: e,
-          ),
-        )
+                color: rainbowColors[e % rainbowColors.length],
+                index: e,
+              ),
+            )
             .toList(),
       ),
     );
